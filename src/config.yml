@@ -1,0 +1,55 @@
+############################################################
+# +------------------------------------------------------+ #
+# |                       sChain                         | #
+# +------------------------------------------------------+ #
+############################################################
+
+#
+# Discord: https://discord.gg/ysQMPe5tPh
+# Plugin criado por Stompado
+#
+
+#Caso o jogador não tenha permissão para o(s) comando(s)
+SemPermissao: '&cVoce não possui permissão para esse comando.'
+
+#Caso ja esteja na Chain
+NaChain: '&c&lCHAIN &cVoce está já está na Chain!'
+
+#Caso não esteja na Chain
+ForaDaChain: '&c&lCHAIN &cVoce não está na Chain!'
+
+#Caso o jogador tente executar comandos na Chain
+ChainComandosMensagem: '&c&lCHAIN &cNão pode executar comando na Chain'
+
+#Caso o jogador tente dropar os itens na Chain
+ChainItensDropMensagem: '&c&lCHAIN &cVoce não pode dropar itens na Chain'
+
+#Quando o jogador saia da Chain no ActionBar (Para todos os jogadores onlines)
+ChainSaidaMensagem: '&c&lCHAIN &7O jogador &c{jogador} &7saiu da &cChain'
+
+#Quando o jogador se desconecte na Chain no ActionBar
+SairDaChain: '&c&lCHAIN &7O jogador &c{jogador} &7se desconectou no meio da &cChain'
+
+#Caso o jogador quebre blocos na Chain
+QuebrarBlocosNaChain: '&c&lCHAIN &7Voce não pode quebrar blocos na &c&lCHAIN&7!'
+
+#Quando o jogador for para a Chain no ActionBar (Para todos os jogadores onlines)
+ChainMensagem: '&c&lCHAIN &7O jogador &c{jogador} &7entrou na &cChain&7!'
+
+#Quando um jogador morrer na Chain no ActionBar (Para todos os jogadores onlines)
+ChainDeathMensagem: '&c&lCHAIN &7O jogador &c{assassino} &7assassinou o jogador &c{vitima}'
+
+#Caso o jogador queira ir para o /chain e tenha itens no inventário
+ItemsNoInventario: '&c&lCHAIN &cEsvazie o seu inventário para poder ir para o /chain.'
+
+#Regerar vida no Chain (Caso deixe "true" não irá recuperar a vida)
+RegenerarVida: false
+
+#Para limpar os drops do jogador quando morrer
+LimparDrops: true
+
+#Aqui ficará os comandos liberados na Chain
+ComandosLiberadosNaChain:
+  - ''
+  - '/spawn'
+  - ''

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="sChain:jar">
+    <output-path>$PROJECT_DIR$/../OneDrive/Área de Trabalho/Servidor S/plugins</output-path>
+    <root id="archive" name="sChain.jar">
+      <element id="module-output" name="sChain" />
+    </root>
+  </artifact>
+</component>

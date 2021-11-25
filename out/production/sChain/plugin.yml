@@ -1,0 +1,9 @@
+name: sChain
+version: 1.0.0
+author: Stompado
+website: https://discord.gg/ysQMPe5tPh
+main: chain.sChain
+commands:
+  chain:
+    aliases: [arena]
+    description: 'Veja com comandos gerais'
