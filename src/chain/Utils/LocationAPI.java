@@ -2,36 +2,17 @@ package chain.Utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 
 public class LocationAPI {
-
-	public static String locationSerializer(Location location) {
-		String world = location.getWorld().getName();
-
-		double x = location.getX();
-		double y = location.getY();
-		double z = location.getZ();
-
-		float yaw = location.getYaw();
-		float pitch = location.getPitch();
-
-		return world + ";" + x + ";" + y + ";" + z + ";" + yaw + ";" + pitch;
+	public static Location Unserializer(String serialized) {
+		String[] divPoints = serialized.split("; ");
+		Location deserialized = new Location(Bukkit.getWorld(divPoints[0]), Double.parseDouble(divPoints[1]), Double.parseDouble(divPoints[2]), Double.parseDouble(divPoints[3]));
+		deserialized.setYaw(Float.parseFloat(divPoints[4]));
+		deserialized.setPitch(Float.parseFloat(divPoints[5]));
+		return deserialized;
 	}
-
-	public static Location locationUnserializer(String split) {
-		String[] splitLocation = split.split(";");
-
-		World world = Bukkit.getWorld(splitLocation[0]);
-
-		double x = Double.parseDouble(splitLocation[1]);
-		double y = Double.parseDouble(splitLocation[2]);
-		double z = Double.parseDouble(splitLocation[3]);
-
-		float yaw = Float.parseFloat(splitLocation[4]);
-		float pitch = Float.parseFloat(splitLocation[5]);
-
-		return new Location(world, x, y, z, yaw, pitch);
+	public static String Serializer(Location unserialized) {
+			return unserialized.getWorld().getName() + "; " + unserialized.getX() + "; " + unserialized.getY() + "; " + unserialized.getZ() + "; " + unserialized
+					.getYaw() + "; " + unserialized.getPitch();
 	}
-
 }

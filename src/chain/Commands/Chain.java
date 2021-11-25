@@ -1,5 +1,6 @@
 package chain.Commands;
 
+import chain.ConfigManager;
 import chain.Utils.ActionBarAPI;
 import chain.Utils.LocationAPI;
 import chain.Utils.T_Config;
@@ -13,6 +14,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
+
 public class Chain implements CommandExecutor {
 
     @Override
@@ -24,10 +27,16 @@ public class Chain implements CommandExecutor {
         }
 
         Player p = (Player) sender;
+        List<String> onChain = sChain.getOnChain();
+        ConfigManager conf = sChain.getConfigManager();
+        T_Config kit = sChain.getKit();
+        T_Config locs = sChain.getLocations();
+
         if (args.length == 1) {
+
             if (args[0].equalsIgnoreCase("sair")) {
-                if (!sChain.onChain.contains(p.getName())) {
-                    p.sendMessage(sChain.Config.ForaChain);
+                if (!onChain.contains(p.getName())) {
+                    p.sendMessage(conf.ForaChain);
                     return true;
                 }
 
@@ -36,37 +45,37 @@ public class Chain implements CommandExecutor {
                 playerTeleportExitChain(p);
                 p.getInventory().clear();
                 p.getInventory().setArmorContents(null);
-                sChain.onChain.remove(p.getName());
+                onChain.remove(p.getName());
                 for (Player exit : Bukkit.getOnlinePlayers())
-                    ActionBarAPI.sendActionBar(sChain.Config.ChainMessageExit.replace("{jogador}", p.getName()), exit);
+                    ActionBarAPI.sendActionBar(conf.ChainMessageExit.replace("{jogador}", p.getName()), exit);
 
             } else if (args[0].equalsIgnoreCase("setspawn") || args[0].equalsIgnoreCase("setentrada") || args[0].equalsIgnoreCase("setarena")) {
                 if (!p.hasPermission("schain.admin")) {
-                    p.sendMessage(sChain.Config.semPerm);
+                    p.sendMessage(conf.semPerm);
                     return true;
                 }
-                String locationSerialized = LocationAPI.locationSerializer(p.getLocation());
+                String locationSerialized = LocationAPI.Serializer(p.getLocation());
 
-                sChain.Instance.locations.getConfig().set("Locais.Chain.Entrada", locationSerialized);
-                sChain.Instance.locations.saveConfig();
+                locs.getConfig().set("Locais.Chain.Entrada", locationSerialized);
+                locs.saveConfig();
 
                 p.sendMessage("§c[sChain] §aA §cChain §afoi definida com sucesso.");
 
             } else if (args[0].equalsIgnoreCase("setsaida") || args[0].equalsIgnoreCase("setexit")) {
                 if (!p.hasPermission("schain.admin")) {
-                    p.sendMessage(sChain.Config.semPerm);
+                    p.sendMessage(conf.semPerm);
                     return true;
                 }
-                String locationSerialized = LocationAPI.locationSerializer(p.getLocation());
+                String locationSerialized = LocationAPI.Serializer(p.getLocation());
 
-                sChain.Instance.locations.getConfig().set("Locais.Chain.Saida", locationSerialized);
-                sChain.Instance.locations.saveConfig();
+                locs.getConfig().set("Locais.Chain.Saida", locationSerialized);
+                locs.saveConfig();
 
                 p.sendMessage("§c[sChain] §aO local de §cSaída §ada §cChain §afoi definido com sucesso.");
 
             } else if (args[0].equalsIgnoreCase("setkit") || args[0].equalsIgnoreCase("setarkit")) {
                 if (!p.hasPermission("schain.admin")) {
-                    p.sendMessage(sChain.Config.semPerm);
+                    p.sendMessage(conf.semPerm);
                     return true;
 
                 }
@@ -79,12 +88,12 @@ public class Chain implements CommandExecutor {
                 int loop;
 
                 for (loop = 0; loop <= 35; loop++)
-                    sChain.Instance.kit.set("Itens.Slot." + loop, p.getInventory().getItem(loop));
+                    kit.getConfig().set("Itens.Slot." + loop, p.getInventory().getItem(loop));
 
                 for (loop = 36; loop <= 39; loop++)
-                    sChain.Instance.kit.set("Armadura.Slot." + loop, p.getInventory().getItem(loop));
+                    kit.getConfig().set("Armadura.Slot." + loop, p.getInventory().getItem(loop));
 
-                sChain.Instance.kit.saveConfig();
+                kit.saveConfig();
 
                 p.getInventory().clear();
                 p.getInventory().setArmorContents(null);
@@ -114,16 +123,16 @@ public class Chain implements CommandExecutor {
 
         } else {
 
-            if (sChain.onChain.contains(p.getName())) {
-                p.sendMessage(sChain.Config.PlayerChain);
+            if (onChain.contains(p.getName())) {
+                p.sendMessage(conf.PlayerChain);
                 return true;
             }
 
-            if (sChain.Instance.kit.getConfig().get("Itens.Slot") == null) {
+            if (kit.getConfig().get("Itens.Slot") == null) {
                 p.sendMessage("O kit ainda não foi definido.");
                 return true;
             }
-            if (sChain.Instance.kit.getConfig().get("Armadura.Slot") == null) {
+            if (kit.getConfig().get("Armadura.Slot") == null) {
                 p.sendMessage("O kit ainda não foi definido.");
                 return true;
             }
@@ -133,39 +142,39 @@ public class Chain implements CommandExecutor {
             if (hasChainSaidaLocation(p)) { return true; }
 
             if (p.getInventory().getHelmet() != null || p.getInventory().getChestplate() != null || p.getInventory().getLeggings() != null || p.getInventory().getBoots() != null) {
-                p.sendMessage(sChain.Config.ItemsNoInv);
+                p.sendMessage(conf.ItemsNoInv);
                 return true;
 
             }
 
             if (!isInventoryEmpty(p)) {
-                p.sendMessage(sChain.Config.ItemsNoInv);
+                p.sendMessage(conf.ItemsNoInv);
                 return true;
             }
 
-            if (sChain.onChain.contains(p.getName())) {
-                p.sendMessage(sChain.Config.PlayerChain);
+            if (onChain.contains(p.getName())) {
+                p.sendMessage(conf.PlayerChain);
                 return true;
             }
 
             playerTeleportChain(p);
 
-            sChain.onChain.add(p.getName());
+            onChain.add(p.getName());
 
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "effect " + p.getName() + " clear");
 
             int loop;
 
             for (loop = 0; loop <= 35; loop++)
-                p.getInventory().setItem(loop, sChain.Instance.kit.getConfig().getItemStack("Itens.Slot." + loop));
+                p.getInventory().setItem(loop, kit.getConfig().getItemStack("Itens.Slot." + loop));
 
             for (loop = 36; loop <= 39; loop++)
-                p.getInventory().setItem(loop, sChain.Instance.kit.getConfig().getItemStack("Armadura.Slot." + loop));
+                p.getInventory().setItem(loop, kit.getConfig().getItemStack("Armadura.Slot." + loop));
 
             p.updateInventory();
 
             for (Player action : Bukkit.getOnlinePlayers())
-                ActionBarAPI.sendActionBar(sChain.Config.ChainMessage.replace("{jogador}", p.getName()), action);
+                ActionBarAPI.sendActionBar(conf.ChainMessage.replace("{jogador}", p.getName()), action);
 
         }
         return false;
@@ -181,45 +190,45 @@ public class Chain implements CommandExecutor {
     }
 
     private void playerTeleportChain(Player p) {
-        T_Config locationFile = sChain.Instance.locations;
+        T_Config locationFile = sChain.getLocations();
         FileConfiguration locationConfig = locationFile.getConfig();
 
-        Location locationChain = LocationAPI.locationUnserializer(locationConfig.getString("Locais.Chain.Entrada"));
+        Location locationChain = LocationAPI.Unserializer(locationConfig.getString("Locais.Chain.Entrada"));
 
         p.teleport(locationChain);
     }
 
     public void playerTeleportExitChain(Player p) {
-        T_Config locationFile = sChain.Instance.locations;
+        T_Config locationFile = sChain.getLocations();
         FileConfiguration locationConfig = locationFile.getConfig();
 
-        Location locationExitChain = LocationAPI.locationUnserializer(locationConfig.getString("Locais.Chain.Saida"));
+        Location locationExitChain = LocationAPI.Unserializer(locationConfig.getString("Locais.Chain.Saida"));
 
         p.teleport(locationExitChain);
     }
 
     private boolean hasChainLocation(Player p) {
-        T_Config locationFile = sChain.Instance.locations;
+        T_Config locationFile = sChain.getLocations();
         FileConfiguration locationConfig = locationFile.getConfig();
 
         String location = locationConfig.getString("Locais.Chain.Entrada");
 
         if (location == null) {
             p.sendMessage("§c[sChain] A chain ainda não foi definida.");
-            return  true;
+            return true;
         }
         return false;
     }
 
     private boolean hasChainSaidaLocation(Player p) {
-        T_Config locationFile = sChain.Instance.locations;
+        T_Config locationFile = sChain.getLocations();
         FileConfiguration locationConfig = locationFile.getConfig();
 
         String location = locationConfig.getString("Locais.Chain.Saida");
 
         if (location == null) {
             p.sendMessage("§c[sChain] A saida da chain ainda não foi definida.");
-            return  true;
+            return true;
         }
         return false;
     }

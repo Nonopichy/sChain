@@ -25,7 +25,7 @@ public class ConfigManager {
 
     public List<String> CommandsReleased;
 
-    private static FileConfiguration Config = sChain.Instance.getConfig();
+    private static FileConfiguration Config = sChain.getInstance().getConfig();
 
     public void loadConfig() {
 
